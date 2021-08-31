@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nohup npm run start > ./start.log 2>&1 &
+nohup npm run start > ./output.log 2>&1 &

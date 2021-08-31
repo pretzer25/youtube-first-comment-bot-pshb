@@ -4,3 +4,4 @@ node_modules
 client_secret.json
 comments.json
 address.txt
+*.log
