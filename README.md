@@ -18,12 +18,14 @@ Create `comments.json` containing the channel ID's and the comment to leave (che
 Run the script with `npm run start` or the bash or vbs script if you want it to run hidden. You will be prompted
 to sign in.
 
-Finally, copy the localtunnel link (found in the output as `Server accessible at <link>` and in
+~~Finally, copy the localtunnel link (found in the output as `Server accessible at <link>` and in
 `address.txt`) and use it to subscribe on
 [Google's pubhubsubbub server](https://pubsubhubbub.appspot.com/subscribe) or any other WebSub server such
 as [Superfeedr](https://superfeedr.com/) (requires an account) for each channel. The callback URL will be the
 localtunnel link, and the topic URL will be `https://www.youtube.com/xml/feeds/videos.xml?channel_id=<channel ID>`
-where `<channel ID>` is the channel ID to subscribe to. Leave any other fields blank.
+where `<channel ID>` is the channel ID to subscribe to. Leave any other fields blank.~~
+
+UPDATE: This is no longer necessary as the script will automatically subscribe to Google's pubhubsubbub server.
 
 Now, when any of the channels you've subscribed to posts a new video, the bot will automatically leave a comment
 in about 15 to 25 seconds.

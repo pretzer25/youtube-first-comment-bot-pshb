@@ -2,6 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 const express = require('express');
 const localtunnel = require('localtunnel');
+const fetch = require("node-fetch");
 const bodyParser = require('body-parser');
 require('body-parser-xml')(bodyParser);
 
@@ -43,7 +44,27 @@ const subdomain = process.env.SUBDOMAIN;
 
   app.listen(port, () => console.log(`Server started on port ${port}.`));
   const tunnel = await localtunnel({ port, subdomain });
-  console.log(`Server accessible at ${tunnel.url}/feeds.`);
-  fs.writeFileSync('./address.txt', `${tunnel.url}/feeds`);
+  const url = `${tunnel.url}/feeds`
+  console.log(`Server accessible at ${url}.`);
+
+  Object.keys(JSON.parse("" + await fs.promises.readFile("comments.json")))
+    .forEach(id => fetch("https://pubsubhubbub.appspot.com/subscribe", {
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      "body": new URLSearchParams({
+        "hub.callback": url,
+        "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${id}`,
+        "hub.verify": "async",
+        "hub.mode": "subscribe"
+      }),
+      "method": "POST",
+    }).then(response => response.ok
+      ? console.log(`successfully subscribed to ${id}.`)
+      : console.log(`failed to subscribed to ${id} with status code ${response.status} and message ${response.statusText}.`)
+    )
+  );
+
+  fs.writeFileSync('./address.txt', url);
   tunnel.on('close', () => console.log('localtunnel connection closed'));
 })();
